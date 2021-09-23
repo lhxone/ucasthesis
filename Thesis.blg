@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d (TeX Live 2021)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Thesis.aux
+The style file: Biblio/gbt7714-author-year.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 150 items from 100.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: Biblio/ref.bib
+Warning--empty key in 李宏2020基于民众视阈下的疫情数据可视化设计路径研究
+Warning--empty key in 郭宏曦2020新型冠状病毒肺炎疫情数据的可视化探索
+Warning--empty key in 韩洪勇2020基于
+Warning--empty key in 陈俊生2019基于
+Warning--empty key in 赵娟2020浅谈时空大数据与数据可视化在疫情地图中的应用
+You've used 6 entries,
+            5319 wiz_defined-function locations,
+            1071 strings with 8560 characters,
+and the built_in function-call counts, 15639 in all, are:
+= -- 596
+> -- 1318
+< -- 1931
++ -- 739
+- -- 203
+* -- 192
+:= -- 2450
+add.period$ -- 18
+call.type$ -- 6
+change.case$ -- 22
+chr.to.int$ -- 622
+cite$ -- 17
+duplicate$ -- 121
+empty$ -- 318
+format.name$ -- 93
+if$ -- 3951
+int.to.chr$ -- 7
+int.to.str$ -- 1
+missing$ -- 0
+newline$ -- 46
+num.names$ -- 24
+pop$ -- 402
+preamble$ -- 1
+purify$ -- 21
+quote$ -- 0
+skip$ -- 1343
+stack$ -- 0
+substring$ -- 856
+swap$ -- 0
+text.length$ -- 60
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 94
+warning$ -- 5
+while$ -- 88
+width$ -- 0
+write$ -- 94
+(There were 5 warnings)

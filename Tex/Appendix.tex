@@ -1,46 +1,723 @@
-\chapter{中国科学院大学学位论文撰写要求}
+\chapter{Python代码}
 
-学位论文是研究生科研工作成果的集中体现，是评判学位申请者学术水平、授予其学位的主要依据，是科研领域重要的文献资料。根据《科学技术报告、学位论文和学术论文的编写格式》（GB/T 7713-1987）、《学位论文编写规则》（GB/T 7713.1-2006）和《文后参考文献著录规则》（GB7714—87）等国家有关标准，结合中国科学院大学（以下简称“国科大”）的实际情况，特制订本规定。
+\section{spider.py---用来爬取网页数据}
 
-\section{论文无附录者无需附录部分}
+\lstset{
+ columns=fixed,       
+ numbers=left,                                        % 在左侧显示行号
+ numberstyle=\tiny\color{gray},                       % 设定行号格式
+ frame=none,                                          % 不显示背景边框
+ backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+ keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+ numberstyle=\footnotesize\color{darkgray},           
+ commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
+ stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式
+ showstringspaces=false,                              % 不显示字符串中的空格
+ language=Python,                                        % 设置语言
+}
+\begin{lstlisting}
+import os
+import pymysql
+import time
+import json
+import traceback  # 追踪异常
+import requests
 
-\section{测试公式编号 \texorpdfstring{$\Lambda,\lambda,\theta,\bar{\Lambda},\sqrt{S_{NN}}$}{$\textLambda,\textlambda,\texttheta,\bar{\textLambda},\sqrt{S_{NN}}$}} \label{sec:testmath}
 
-\begin{equation} \label{eq:appedns}
-    \adddotsbeforeeqnnum%
-    \begin{cases}
-        \frac{\partial \rho}{\partial t} + \nabla\cdot(\rho\Vector{V}) = 0\\
-        \frac{\partial (\rho\Vector{V})}{\partial t} + \nabla\cdot(\rho\Vector{V}\Vector{V}) = \nabla\cdot\Tensor{\sigma}\\
-        \frac{\partial (\rho E)}{\partial t} + \nabla\cdot(\rho E\Vector{V}) = \nabla\cdot(k\nabla T) + \nabla\cdot(\Tensor{\sigma}\cdot\Vector{V})
-    \end{cases}
-\end{equation}
-\begin{equation}
-    \adddotsbeforeeqnnum%
-    \frac{\partial }{\partial t}\int\limits_{\Omega} u \, \mathrm{d}\Omega + \int\limits_{S} \unitVector{n}\cdot(u\Vector{V}) \, \mathrm{d}S = \dot{\phi}
-\end{equation}
-\[
-    \begin{split}
-        \mathcal{L} \{f\}(s) &= \int _{0^{-}}^{\infty} f(t) e^{-st} \, \mathrm{d}t, \ 
-        \mathscr{L} \{f\}(s) = \int _{0^{-}}^{\infty} f(t) e^{-st} \, \mathrm{d}t\\
-        \mathcal{F} {\bigl (} f(x+x_{0}) {\bigr )} &= \mathcal{F} {\bigl (} f(x) {\bigr )} e^{2\pi i\xi x_{0}}, \ 
-        \mathscr{F} {\bigl (} f(x+x_{0}) {\bigr )} = \mathscr{F} {\bigl (} f(x) {\bigr )} e^{2\pi i\xi x_{0}}
-    \end{split}
-\]
+def get_tencent_data():
+    url = 'https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5'
+    url_his = 'https://view.inews.qq.com/g2/getOnsInfo?name=disease_other'
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+    }
 
-mathtext: $A,F,L,2,3,5,\sigma$, mathnormal: $A,F,L,2,3,5,\sigma$, mathrm: $\mathrm{A,F,L,2,3,5,\sigma}$.
+    r = requests.get(url, headers)
+    res = json.loads(r.text)  # json字符串转字典
+    data_all = json.loads(res['data'])
 
-mathbf: $\mathbf{A,F,L,2,3,5,\sigma}$, mathit: $\mathit{A,F,L,2,3,5,\sigma}$, mathsf: $\mathsf{A,F,L,2,3,5,\sigma}$.
+    r_his = requests.get(url_his, headers)
+    res_his = json.loads(r_his.text)
+    data_his = json.loads(res_his['data'])
 
-mathtt: $\mathtt{A,F,L,2,3,5,\sigma}$, mathfrak: $\mathfrak{A,F,L,2,3,5,\sigma}$, mathbb: $\mathbb{A,F,L,2,3,5,\sigma}$.
+    history = {}  # 历史数据
 
-mathcal: $\mathcal{A,F,L,2,3,5,\sigma}$, mathscr: $\mathscr{A,F,L,2,3,5,\sigma}$, boldsymbol: $\boldsymbol{A,F,L,2,3,5,\sigma}$.
+    for i in data_his["chinaDayList"]:
+        ds = "2020." + i["date"]
+        tup = time.strptime(ds, "%Y.%m.%d")
+        ds = time.strftime("%Y-%m-%d", tup)  # 改变时间格式
+        confirm = i["confirm"]
+        suspect = i["suspect"]
+        heal = i["heal"]
+        dead = i["dead"]
+        history[ds] = {"confirm": confirm, "suspect": suspect, "heal": heal, "dead": dead}
+    for i in data_his["chinaDayAddList"]:
+        ds = "2020." + i["date"]
+        tup = time.strptime(ds, "%Y.%m.%d")
+        ds = time.strftime("%Y-%m-%d", tup)
+        confirm = i["confirm"]
+        suspect = i["suspect"]
+        heal = i["heal"]
+        dead = i["dead"]
+        history[ds].update({"confirm_add": confirm, "suspect_add": suspect, "heal_add": heal, "dead_add": dead})
 
-vector: $\Vector{\sigma, T, a, F, n}$, unitvector: $\unitVector{\sigma, T, a, F, n}$
+    # 下面就不用动了
+    details = []  # 当日详细数据
+    update_time = data_all["lastUpdateTime"]
+    data_country = data_all["areaTree"]  # list 25个国家
+    data_province = data_country[0]["children"]  # 中国各省
+    for pro_infos in data_province:
+        province = pro_infos["name"]  # 省名
+        for city_infos in pro_infos["children"]:
+            city = city_infos["name"]
+            confirm = city_infos["total"]["confirm"]
+            confirm_add = city_infos["today"]["confirm"]
+            heal = city_infos["total"]["heal"]
+            dead = city_infos["total"]["dead"]
+            details.append([update_time, province, city, confirm, confirm_add, heal, dead])
+    return history, details
 
-matrix: $\Matrix{\sigma, T, a, F, n}$, unitmatrix: $\unitMatrix{\sigma, T, a, F, n}$
 
-tensor: $\Tensor{\sigma, T, a, F, n}$, unittensor: $\unitTensor{\sigma, T, a, F, n}$ 
+def get_conn():
+    """
+    :return: 连接，游标
+    """
+    # 创建连接
+    conn = pymysql.connect(host="127.0.0.1",
+                           user="root",
+                           password="123456",
+                           db="cov",
+                           charset="utf8")
+    # 创建游标
+    cursor = conn.cursor()  # 执行完毕返回的结果集默认以元组显示
+    return conn, cursor
 
-\section{测试生僻字}
 
-霜蟾盥薇曜灵霜颸妙鬘虚霩淩澌菀枯菡萏泬寥窅冥毰毸濩落霅霅便嬛岧峣瀺灂姽婳愔嫕飒纚棽俪緸冤莩甲摛藻卮言倥侗椒觞期颐夜阑彬蔚倥偬澄廓簪缨陟遐迤逦缥缃鹣鲽憯懔闺闼璀错媕婀噌吰澒洞阛闠覼缕玓瓑逡巡諓諓琭琭瀌瀌踽踽叆叇氤氲瓠犀流眄蹀躞赟嬛茕頔璎珞螓首蘅皋惏悷缱绻昶皴皱颟顸愀然菡萏卑陬纯懿犇麤掱暒 墌墍墎墏墐墒墒墓墔墕墖墘墖墚墛坠墝增墠墡墢墣墤墥墦墧墨墩墪樽墬墭堕墯墰墱墲坟墴墵垯墷墸墹墺墙墼墽垦墿壀壁壂壃壄壅壆坛壈壉壊垱壌壍埙壏壐壑壒压壔壕壖壗垒圹垆壛壜壝垄壠壡坜壣壤壥壦壧壨坝塆圭嫶嫷嫸嫹嫺娴嫼嫽嫾婳妫嬁嬂嬃嬄嬅嬆嬇娆嬉嬊娇嬍嬎嬏嬐嬑嬒嬓嬔嬕嬖嬗嬘嫱嬚嬛嬜嬞嬟嬠嫒嬢嬣嬥嬦嬧嬨嬩嫔嬫嬬奶嬬嬮嬯婴嬱嬲嬳嬴嬵嬶嬷婶嬹嬺嬻嬼嬽嬾嬿孀孁孂娘孄孅孆孇孆孈孉孊娈孋孊孍孎孏嫫婿媚嵭嵮嵯嵰嵱嵲嵳嵴嵵嵶嵷嵸嵹嵺嵻嵼嵽嵾嵿嶀嵝嶂嶃崭嶅嶆岖嶈嶉嶊嶋嶌嶍嶎嶏嶐嶑嶒嶓嵚嶕嶖嶘嶙嶚嶛嶜嶝嶞嶟峤嶡峣嶣嶤嶥嶦峄峃嶩嶪嶫嶬嶭崄嶯嶰嶱嶲嶳岙嶵嶶嶷嵘嶹岭嶻屿岳帋巀巁巂巃巄巅巆巇巈巉巊岿巌巍巎巏巐巑峦巓巅巕岩巗巘巙巚帠帡帢帣帤帨帩帪帬帯帰帱帲帴帵帷帹帺帻帼帽帾帿幁幂帏幄幅幆幇幈幉幊幋幌幍幎幏幐幑幒幓幖幙幚幛幜幝幞帜幠幡幢幤幥幦幧幨幩幪幭幮幯幰幱庍庎庑庖庘庛庝庠庡庢庣庤庥庨庩庪庬庮庯庰庱庲庳庴庵庹庺庻庼庽庿廀厕廃厩廅廆廇廋廌廍庼廏廐廑廒廔廕廖廗廘廙廛廜廞庑廤廥廦廧廨廭廮廯廰痈廲廵廸廹廻廼廽廿弁弅弆弇弉弖弙弚弜弝弞弡弢弣弤弨弩弪弫弬弭弮弰弲弪弴弶弸弻弼弽弿彖彗彘彚彛彜彝彞彟彴彵彶彷彸役彺彻彽彾佛徂徃徆徇徉后徍徎徏径徒従徔徕徖徙徚徛徜徝从徟徕御徢徣徤徥徦徧徨复循徫旁徭微徯徰徱徲徳徴徵徶德徸彻徺忁忂惔愔忇忈忉忔忕忖忚忛応忝忞忟忪挣挦挧挨挩挪挫挬挭挮挰掇授掉掊掋掍掎掐掑排掓掔掕挜掚挂掜掝掞掟掠采探掣掤掦措掫掬掭掮掯掰掱掲掳掴掵掶掸掹掺掻掼掽掾掿拣揁揂揃揅揄揆揇揈揉揊揋揌揍揎揑揓揔揕揖揗揘揙揤揥揦揧揨揫捂揰揱揲揳援揵揶揷揸揻揼揾揿搀搁搂搃搄搅搇搈搉搊搋搌搎搏搐搑搒摓摔摕摖摗摙摚摛掼摝摞摠摡斫斩斮斱斲斳斴斵斶斸旪旫旮旯晒晓晔晕晖晗晘晙晛晜晞晟晠晡晰晣晤晥晦晧晪晫晬晭晰晱晲晳晴晵晷晸晹晻晼晽晾晿暀暁暂暃暄暅暆暇晕晖暊暋暌暍暎暏暐暑暒暓暔暕暖暗旸暙暚暛暜暝暞暟暠暡暣暤暥暦暧暨暩暪暬暭暮暯暰昵暲暳暴暵
+def close_conn(conn, cursor):
+    if cursor:
+        cursor.close()
+    if conn:
+        conn.close()
+
+
+def update_details():
+    """
+    更新 details 表
+    :return:
+    """
+    cursor = None
+    conn = None
+    try:
+        li = get_tencent_data()[1]  # 0 是历史数据字典,1 最新详细数据列表
+        conn, cursor = get_conn()
+        sql = """insert into details(update_time,province,city,confirm,confirm_add,heal,dead) values(%s,%s,%s,%s,%s,%s,%s)"""
+        sql_query = """select %s='(select update_time from details order by id desc limit 1)'"""  # 对比当前最大时间戳
+        cursor.execute(sql_query, li[0][0])
+        if not cursor.fetchone()[0]:
+            print(f"{time.asctime()}开始更新最新数据")
+            for item in li:
+                cursor.execute(sql, item)
+            conn.commit()  # 提交事务 update delete insert操作
+            print(f"{time.asctime()}更新最新数据完毕")
+        else:
+            print(f"{time.asctime()}已是最新数据！")
+    except:
+        traceback.print_exc()
+    finally:
+        close_conn(conn, cursor)
+
+
+def insert_history():
+    """
+        插入历史数据
+    :return:
+    """
+    cursor = None
+    conn = None
+    try:
+        dic = get_tencent_data()[0]  # 0 是历史数据字典,1 最新详细数据列表
+        print(f"{time.asctime()}开始插入历史数据")
+        conn, cursor = get_conn()
+        sql = """insert into history values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        for k, v in dic.items():
+            # item 格式 {'2020-01-13': {'confirm': 41, 'suspect': 0, 'heal': 0, 'dead': 1}
+            cursor.execute(sql, [k, v.get("confirm"), v.get("confirm_add"), v.get("suspect"),
+                                 v.get("suspect_add"), v.get("heal"), v.get("heal_add"),
+                                 v.get("dead"), v.get("dead_add")])
+
+        conn.commit()  # 提交事务 update delete insert操作
+        print(f"{time.asctime()}插入历史数据完毕")
+    except:
+        traceback.print_exc()
+    finally:
+        close_conn(conn, cursor)
+
+
+def update_history():
+    """
+    更新历史数据
+    :return:
+    """
+    cursor = None
+    conn = None
+    try:
+        dic = get_tencent_data()[0]  # 0 是历史数据字典,1 最新详细数据列表
+        print(f"{time.asctime()}开始更新历史数据")
+        conn, cursor = get_conn()
+        sql = """insert into history (ds,confirm,suspect,heal,dead,confirm_add,suspect_add,heal_add,dead_add) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        sql_query = """select confirm from history where ds=%s"""
+        for k, v in dic.items():
+            # item 格式 {'2020-01-13': {'confirm': 41, 'suspect': 0, 'heal': 0, 'dead': 1}}
+            if not cursor.execute(sql_query, k):
+                cursor.execute(sql, [k, v.get("confirm"), v.get("confirm_add"), v.get("suspect"),
+                                     v.get("suspect_add"), v.get("heal"), v.get("heal_add"),
+                                     v.get("dead"), v.get("dead_add")])
+        conn.commit()  # 提交事务 update delete insert操作
+        print(f"{time.asctime()}历史数据更新完毕")
+    except:
+        traceback.print_exc()
+    finally:
+        close_conn(conn, cursor)
+
+
+if __name__ == "__main__":
+    insert_history()
+    update_history()
+    update_details()
+\end{lstlisting}
+
+\section{utils.py---app.py中所调用的方法}
+
+\begin{lstlisting}
+    import time
+    import pymysql
+    from decimal import Decimal
+    import json
+    
+    
+    def get_time():
+        time_str = time.strftime("%Y{}%m{}%d{} %X")
+        return time_str.format("年", "月", "日")
+    
+    
+    def get_conn():
+        """
+        :return: 连接，游标
+        """
+        # 创建连接
+        conn = pymysql.connect(host="localhost",
+                               user="root",
+                               password="123456",
+                               db="cov",
+                               charset="utf8")
+        # 创建游标
+        cursor = conn.cursor()  # 执行完毕返回的结果集默认以元组显示
+        return conn, cursor
+    
+    
+    def close_conn(conn, cursor):
+        cursor.close()
+        conn.close()
+    
+    
+    def query(sql, *args):
+        """
+        封装通用查询
+        :param sql:
+        :param args:
+        :return: 返回查询到的结果，((),(),)的形式
+        """
+        conn, cursor = get_conn()
+        cursor.execute(sql, args)
+        res = cursor.fetchall()
+        close_conn(conn, cursor)
+        return res
+    
+    
+    def get_c1_data():
+        """
+        :return: 返回大屏div id=c1 的数据
+        """
+        # 因为会更新多次数据，取时间戳最新的那组数据
+        sql = "select sum(confirm)," \
+              "(select suspect from history order by ds desc limit 1)," \
+              "sum(heal)," \
+              "sum(dead) " \
+              "from details " \
+              "where update_time=(select update_time from details order by update_time desc limit 1) "
+              #"where update_time=(select update_time from details order by update_time desc limit 1) "
+        res = query(sql)
+    
+        res_list = [str(i) for i in res[0]]
+        res_tuple = tuple(res_list)
+        return res_tuple
+    
+    
+    def get_c2_data():
+        """
+        :return:  返回各省数据
+        """
+        # 因为会更新多次数据，取时间戳最新的那组数据
+        sql = "select province,sum(confirm) from details " \
+              "where update_time=(select update_time from details " \
+              "order by update_time desc limit 1) " \
+              "group by province"
+        res = query(sql)
+        return res
+    
+    
+    def get_l1_data():
+        sql = "select ds,confirm,suspect,heal,dead from history"
+        res = query(sql)
+        return res
+    
+    
+    def get_l2_data():
+        sql = "select ds,confirm_add,suspect_add from history"
+        res = query(sql)
+        return res
+    
+    
+    def get_r1_data():
+        """
+        :return:  返回非湖北地区城市确诊人数前5名
+        """
+        sql = 'SELECT province,confirm_add FROM ' \
+              '(select province,sum(confirm_add) as confirm_add from details  ' \
+              'where update_time=(select update_time from details order by update_time desc limit 1) ' \
+              'group by province) as a ' \
+              'ORDER BY confirm_add DESC LIMIT 5'
+        res = query(sql)
+        return res
+    
+    
+    def get_r2_data():
+        '''
+            获取世界各国的疫情数据
+            :return:
+        '''
+        # 因为会更新多次数据，取时间戳最新的那组数据
+        sql = "select province,sum(confirm_add) from details " \
+              "where update_time=(select update_time from details " \
+              "order by update_time desc limit 1) " \
+              "group by province"
+        res = query(sql)
+        return res
+    
+    
+    if __name__ == "__main__":
+        print(get_c1_data())
+\end{lstlisting}    
+
+\section{app.py---启动Flask的主程序}
+
+\begin{lstlisting}
+    import utils
+    from flask import Flask
+    from flask import request
+    from flask import render_template
+    from flask import jsonify
+    from flask_bootstrap import Bootstrap
+    import os
+    import string
+    
+    os.system(
+        'python3 /Users/liuhaoxin/Documents/GitHub/covid-19-china/spider.py && python3 /Users/liuhaoxin/Documents/GitHub/covid-19-china/utils.py')
+    
+    app = Flask(__name__)
+    bootstrap = Bootstrap(app)
+    
+    @app.route('/')
+    def hello_world():
+        return render_template("index.html")
+    
+    
+    @app.route("/c1")
+    def get_c1_data():
+        data = utils.get_c1_data()
+        return jsonify({"confirm":data[0],"suspect":data[1],"heal":data[2],"dead":data[3]})
+    
+    
+    @app.route("/c2")
+    def get_c2_data():
+        res = []
+        for tup in utils.get_c2_data():
+            # print(tup)
+            res.append({"name":tup[0],"value":int(tup[1])})
+        return jsonify({"data":res})
+    
+    
+    @app.route("/l1")
+    def get_l1_data():
+        data = utils.get_l1_data()
+        day,confirm,suspect,heal,dead = [],[],[],[],[]
+        for a,b,c,d,e in data[7:]:
+            day.append(a.strftime("%m-%d"))
+            #  a是datatime类型
+            confirm.append(b)
+            suspect.append(c)
+            heal.append(d)
+            dead.append(e)
+        return jsonify({"day": day, "confirm": confirm, "suspect": suspect, "heal": heal, "dead": dead})
+    
+    
+    @app.route("/l2")
+    def get_l2_data():
+        data = utils.get_l2_data()
+        day, confirm_add, suspect_add = [], [], []
+        for a, b, c in data[7:]:
+            day.append(a.strftime("%m-%d"))  # a是datatime类型
+            confirm_add.append(b)
+            suspect_add.append(c)
+        return jsonify({"day": day, "confirm_add": confirm_add, "suspect_add": suspect_add})
+    
+    
+    @app.route("/r1")
+    def get_r1_data():
+        data = utils.get_r1_data()
+        city = []
+        confirm = []
+        for k,v in data:
+            city.append(k)
+            confirm.append(int(v))
+        return jsonify({"city": city, "confirm": confirm})
+    
+    
+    @app.route("/r2")
+    def get_r2_data():
+        res = []
+        for tup in utils.get_r2_data():
+            # print(tup)
+            res.append({"name": tup[0], "value": int(tup[1])})
+        return jsonify({"data": res})
+    
+    
+    @app.route("/time")
+    def get_time():
+        return utils.get_time()
+    
+    
+    if __name__ == '__main__':
+        # app.run(host='127.0.0.1', port=5000)
+        bootstrap.run()
+\end{lstlisting}
+
+\chapter{网页代码}
+
+\section{index.html}
+
+\lstset{
+ columns=fixed,       
+ numbers=left,                                        % 在左侧显示行号
+ numberstyle=\tiny\color{gray},                       % 设定行号格式
+ frame=none,                                          % 不显示背景边框
+ backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+ keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+ numberstyle=\footnotesize\color{darkgray},           
+ commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
+ stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式
+ showstringspaces=false,                              % 不显示字符串中的空格
+ language=html,                                        % 设置语言
+}
+\begin{lstlisting}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>疫情监控系统</title>
+        <link rel="icon" href="../static/icon.ico">
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="../static/js/jquery-1.11.1.min.js"></script>
+        <script src="../static/js/echarts.min.js"></script>
+        <script src="../static/js/china.js"></script>
+        <link href="../static/css/main.css" rel="stylesheet"/>
+    </head>
+    <body>
+    
+    <div id="tim"></div>
+    <div id="gyroContain" class="col clearfix">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">疫情数据监控平台</a>
+                    </div>
+    
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                <a href="#">国内数据</a>
+                            </li>
+                            <li>
+                                <a href="#">国外数据</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">更多<strong
+                                        class="caret"></strong></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="https://www.baidu.com/#ie=utf8&wd=疫情最新政策">最新政策</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.baidu.com/#ie=utf8&wd=疫情当地政策">当地政策</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.baidu.com/#ie=utf8&wd=疫情国际消息">国际消息</a>
+                                    </li>
+                                    <li class="divider">
+                                    </li>
+                                    <li>
+                                        <a href="#">健康码</a>
+                                    </li>
+                                    <li class="divider">
+                                    </li>
+                                    <li>
+                                        <a href="#">防疫平台</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+    
+                        <ul class="nav navbar-nav navbar-right">
+                            <form class="navbar-form navbar-left" role="search">
+                                <div class="form-group">
+                                    <input type="text" class="form-control"/>
+                                </div>
+                                <button type="submit" class="btn btn-default">搜索</button>
+                            </form>
+                        </ul>
+                    </div>
+    
+                </nav>
+            </div>
+        </div>
+        <div class="row-cols-md-4 row">
+            <div id="l1">我是左1</div>
+            <div id="l2">我是左2</div>
+        </div>
+        <div class="row-cols-md-4 row">
+            <div id="c1" class="row clearfix">
+                <div class="txt"><h2 class="text-lg-center text-center">累计确诊</h2></div>
+                <div class="txt"><h2 class="text-lg-center text-center">剩余疑似</h2></div>
+                <div class="txt"><h2 class="text-lg-center text-center">累计治愈</h2></div>
+                <div class="txt"><h2 class="text-lg-center text-center">累计死亡</h2></div>
+                <div class="num"><h1 class="text-primary text-center"></h1></div>
+                <div class="num"><h1 class="text-primary text-center"></h1></div>
+                <div class="num"><h1 class="text-primary text-center"></h1></div>
+                <div class="num"><h1 class="text-primary text-center"></h1></div>
+            </div>
+            <div id="c2">我是中2</div>
+        </div>
+        <div class="row-cols-md-4 row">
+            <div id="r1">我是右1</div>
+            <div id="r2">我是右2</div>
+        </div>
+    
+        <script src="../static/js/ec_center.js"></script>
+        <script src="../static/js/ec_left1.js"></script>
+        <script src="../static/js/ec_left2.js"></script>
+        <script src="../static/js/ec_right1.js"></script>
+        <script src="../static/js/ec_right2.js"></script>
+        <script src="../static/js/controller.js"></script>
+    </div>
+    </body>
+    </html>
+\end{lstlisting}
+
+\section{controller.js}
+\begin{lstlisting}
+    function gettime() {
+        $.ajax({
+            url: "/time",
+            timeout: 10000, //超时时间设置为10秒；
+            success: function (data) {
+                $("#tim").html(data)
+            },
+            error: function (xhr, type, errorThrown) {
+    
+            }
+        });
+    }
+    
+    function get_c1_data() {
+        $.ajax({
+            url: "/c1",
+            success: function (data) {
+                $(".num h1").eq(0).text(data.confirm);
+                console.log(data.confirm);
+                $(".num h1").eq(1).text(data.suspect);
+                $(".num h1").eq(2).text(data.heal);
+                $(".num h1").eq(3).text(data.dead);
+            },
+            error: function (xhr, type, errorThrown) {
+    
+            }
+        })
+    }
+    
+    function get_c2_data() {
+        $.ajax({
+            url: "/c2",
+            success: function (data) {
+                ec_center_option.series[0].data = data.data
+                ec_center.setOption(ec_center_option)
+            },
+            error: function (xhr, type, errorThrown) {
+    
+            }
+        })
+    }
+    
+    function get_l1_data() {
+        $.ajax({
+            url: "/l1",
+            success: function (data) {
+                var day = []
+                for (let i = 0; i < 8; i++) {
+                    day[7 - i] = data.day[data.day.length - 1 - i]
+                }
+                // ec_left1_Option.xAxis[0].data=data.day
+                ec_left1_Option.xAxis[0].data = day
+                ec_left1_Option.series[0].data = data.confirm
+                console.log(data.confirm);
+                ec_left1_Option.series[1].data = data.suspect
+                // ec_left1_Option.series[2].data = data.heal
+                // ec_left1_Option.series[3].data = data.dead
+                ec_left1.setOption(ec_left1_Option)
+                // console.log(day)
+            },
+            error: function (xhr, type, errorThrown) {
+    
+            }
+        })
+    }
+    
+    function get_l2_data() {
+        $.ajax({
+            url: "/l2",
+            success: function (data) {
+                var day = []
+                for (let i = 0; i < 8; i++) {
+                    day[7 - i] = data.day[data.day.length - 1 - i]
+                }
+                ec_left2_Option.xAxis[0].data = day
+                ec_left2_Option.series[0].data = data.confirm_add
+                ec_left2_Option.series[1].data = data.suspect_add
+                ec_left2.setOption(ec_left2_Option)
+            },
+            error: function (xhr, type, errorThrown) {
+    
+            }
+        })
+    }
+    
+    function get_r1_data() {
+        $.ajax({
+            url: "/r1",
+            success: function (data) {
+                ec_right1_option.xAxis.data = data.city;
+                ec_right1_option.series[0].data = data.confirm;
+                ec_right1.setOption(ec_right1_option);
+            }
+        })
+    }
+    
+    function get_r2_data() {
+        $.ajax({
+            url: "/r2",
+            success: function (data) {
+                ec_right2_option.series[0].data = data.data
+                ec_right2.setOption(ec_right2_option)
+    
+            },
+            error: function (xhr, type, errorThrown) {
+    
+            }
+        })
+    }
+    
+    gettime()
+    get_c1_data()
+    get_c2_data()
+    get_l1_data()
+    get_l2_data()
+    get_r1_data()
+    get_r2_data()
+    
+    setInterval(gettime, 1000)
+    setInterval(get_c1_data, 1000 * 10)
+    setInterval(get_c2_data, 10000 * 10)
+    setInterval(get_l1_data, 10000 * 10)
+    setInterval(get_l2_data, 10000 * 10)
+    setInterval(get_r1_data, 10000 * 10)
+    setInterval(get_r2_data, 10000 * 10)
+\end{lstlisting}
+
+\section{ec\underline{~}center.js}
+\begin{lstlisting}
+    var ec_center = echarts.init(document.getElementById('c2'), "dark");
+
+    var mydata = []
+    
+    var ec_center_option = {
+        title: {
+            text: '全国累计确诊地图',
+            subtext: '',
+            x: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        //左侧小导航图标
+        visualMap: {
+            show: true,
+            x: 'left',
+            y: 'bottom',
+            textStyle: {
+                fontSize: 8,
+            },
+            splitList: [{ start: 1,end: 9 },
+                {start: 10, end: 99 }, 
+                { start: 100, end: 999 },
+                {  start: 1000, end: 9999 },
+                { start: 10000 }],
+            color: ['#8A3310', '#C64918', '#E55B25', '#F2AD92', '#F9DCD1']
+        },
+        //配置属性
+        series: [{
+            name: '累计确诊人数',
+            type: 'map',
+            mapType: 'china',
+            roam: false, //拖动和缩放
+            itemStyle: {
+                normal: {
+                    borderWidth: .5, //区域边框宽度
+                    borderColor: '#009fe8', //区域边框颜色
+                    areaColor: "#ffefd5", //区域颜色
+                },
+                emphasis: { //鼠标滑过地图高亮的相关设置
+                    borderWidth: .5,
+                    borderColor: '#4b0082',
+                    areaColor: "#fff",
+                }
+            },
+            label: {
+                normal: {
+                    show: true, //省份名称
+                    fontSize: 8,
+                },
+                emphasis: {
+                    show: true,
+                    fontSize: 8,
+                }
+            },
+            data:[] //mydata //数据
+        }]
+    };
+    ec_center.setOption(ec_center_option)
+\end{lstlisting}
+
+

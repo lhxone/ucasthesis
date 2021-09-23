@@ -1,0 +1,51 @@
+\begin{thebibliography}{6}
+\providecommand{\biband}{和}
+\providecommand{\bibetal}{等}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax\else
+  \urlstyle{same}\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \DeclareUrlCommand\doi{\urlstyle{rm}}
+  \def\eprint#1#2{#2}
+\else
+  \def\doi#1{\href{https://doi.org/#1}{\nolinkurl{#1}}}
+  \let\eprint\href
+\fi
+
+\bibitem[李宏(2020)]{李宏2020基于民众视阈下的疫情数据可视化设计路径研究}
+李宏.
+\newblock 基于民众视阈下的疫情数据可视化设计路径研究 [J].
+\newblock 包装工程艺术版, 2020, 41\penalty0 (10): 221-227.
+
+\bibitem[赵娟(2020)]{赵娟2020浅谈时空大数据与数据可视化在疫情地图中的应用}
+赵娟.
+\newblock 浅谈时空大数据与数据可视化在疫情地图中的应用
+  [J].
+\newblock 卫星导航定位技术文集 (2020), 2020.
+
+\bibitem[郭宏曦(2020)]{郭宏曦2020新型冠状病毒肺炎疫情数据的可视化探索}
+郭宏曦.
+\newblock 新型冠状病毒肺炎疫情数据的可视化探索 [J].
+\newblock 计算机与网络, 2020, 6.
+
+\bibitem[陈俊生\ {\bibetal}(2019)陈俊生 and
+  彭莉芬]{陈俊生2019基于}
+陈俊生, 彭莉芬.
+\newblock 基于 Python+ Echarts 的大数据可视化系统的设计与实现
+  [J].
+\newblock 安徽电子信息职业技术学院学报, 2019, 18\penalty0 (4):
+  6-9.
+
+\bibitem[韩洪勇\ {\bibetal}(2020)韩洪勇, 冉春晴, and
+  陈硕]{韩洪勇2020基于}
+韩洪勇, 冉春晴, 陈硕.
+\newblock 基于 Echarts 和 Flask 的数据可视化系统 [J].
+\newblock 中国新通信, 2020.
+
+\bibitem[Grinberg(2018)]{grinberg2018flask}
+Grinberg~M.
+\newblock Flask web development: developing web applications with python [M].
+\newblock " O'Reilly Media, Inc.", 2018.
+
+\end{thebibliography}
