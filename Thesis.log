@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.9.22)  23 SEP 2021 11:36
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.9.22)  23 SEP 2021 22:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1640,38 +1640,18 @@ LaTeX Font Info:    Font shape `TU/XITSMath-Regular(3)/m/n' will be
 
 ] (./Tex/Mainmatter.tex (./Tex/Chap_1.tex
 第1章
-
-Package natbib Warning: Citation `李宏2020基于民众视阈下的疫情数据可视化设计路径研究' on page 1 undefined on input line 14.
-
 [1
 
 ]
-
-Package natbib Warning: Citation `郭宏曦2020新型冠状病毒肺炎疫情数据的可视化探索' on page 2 undefined on input line 16.
-
 File: Img//t1.png Graphic file (type bmp)
 <Img//t1.png>
-
-Package natbib Warning: Citation `韩洪勇2020基于' on page 2 undefined on input line 33.
-
-[2]
-
-Package natbib Warning: Citation `陈俊生2019基于' on page 3 undefined on input line 35.
-
-) (./Tex/Chap_2.tex [3] [4
+ [2]) (./Tex/Chap_2.tex [3] [4
 
 ]
 第2章
-
-Package natbib Warning: Citation `grinberg2018flask' on page 5 undefined on input line 27.
-
 File: Img//t2.png Graphic file (type bmp)
 <Img//t2.png>
-[5]
-
-Package natbib Warning: Citation `赵娟2020浅谈时空大数据与数据可视化在疫情地图中的应用' on page 6 undefined on input line 37.
-
-[6]) (./Tex/Chap_3.tex [7] [8
+[5] [6]) (./Tex/Chap_3.tex [7] [8
 
 ]
 第3章
@@ -1705,16 +1685,21 @@ Overfull \hbox (15.282pt too wide) in paragraph at lines 48--49
 
 File: Img//t4.png Graphic file (type bmp)
 <Img//t4.png>
-[14] [15])) [16] (./Tex/Appendix.tex
+[14] [15]) (./Tex/Chap_5.tex [16]
+第5章
+)) [17
+
+] [18
+
+] (./Tex/Appendix.tex
 附录 A
-[17
+[19
 
-
-] [18] [19] [20] [21] [22] [23] [24] [25] [26
+] [20] [21] [22] [23] [24] [25] [26] [27] [28
 
 ]
 附录 B
-[27] [28] [29] [30] [31]
+[29] [30] [31] [32] [33]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 659.
@@ -1739,37 +1724,22 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 659.
 
-[32]) [33] [34
+[34]) [35] [36
 
-] (./Thesis.bbl)
-
-Package natbib Warning: There were undefined citations.
-
-[35
+] (./Thesis.bbl) [37
 
 
-] (./Thesis.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-)
-
-Package rerunfilecheck Warning: File `Thesis.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Thesis.out':
-(rerunfilecheck)             Before: 480023F2339E7EB10752672CBD6EF060;3367
-(rerunfilecheck)             After:  3EDE3D3FD4A94D2EEF8F14328481F31C;3445.
+] (./Thesis.aux)
+Package rerunfilecheck Info: File `Thesis.out' has not changed.
+(rerunfilecheck)             Checksum: 5F8B15BE152281AE8E939D525BC49478;3810.
  ) 
 Here is how much of TeX's memory you used:
- 37430 strings out of 476919
- 743571 string characters out of 5821840
- 2072051 words of memory out of 5000000
- 56731 multiletter control sequences out of 15000+600000
+ 37444 strings out of 476919
+ 743827 string characters out of 5821840
+ 2072316 words of memory out of 5000000
+ 56742 multiletter control sequences out of 15000+600000
  410843 words of font info for 124 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  117i,12n,132p,1270b,3537s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Thesis.pdf (47 pages).
+Output written on Thesis.pdf (49 pages).

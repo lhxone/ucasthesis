@@ -14,12 +14,15 @@
 \contentsline {section}{\numberline {4.1}主页（index.html）的设计}{13}{section.4.1}%
 \contentsline {section}{\numberline {4.2}数据可视化}{13}{section.4.2}%
 \contentsline {section}{\numberline {4.3}对手机设备的适配}{15}{section.4.3}%
-\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}Python代码}{17}{appendix.A}%
-\contentsline {section}{\numberline {A.1}spider.py---用来爬取网页数据}{17}{section.A.1}%
-\contentsline {section}{\numberline {A.2}utils.py---app.py中所调用的方法}{20}{section.A.2}%
-\contentsline {section}{\numberline {A.3}app.py---启动Flask的主程序}{23}{section.A.3}%
-\contentsline {chapter}{\numberline {附录 B\hspace {.3em}}网页代码}{27}{appendix.B}%
-\contentsline {section}{\numberline {B.1}index.html}{27}{section.B.1}%
-\contentsline {section}{\numberline {B.2}controller.js}{29}{section.B.2}%
-\contentsline {section}{\numberline {B.3}ec\underline {\nobreakspace {}}center.js}{32}{section.B.3}%
-\contentsline {chapter}{参考文献}{35}{section*.13}%
+\contentsline {chapter}{\numberline {第5章\hspace {.3em}}结论}{17}{chapter.5}%
+\contentsline {section}{\numberline {5.1}本系统的不足之处}{17}{section.5.1}%
+\contentsline {section}{\numberline {5.2}所学到的知识}{17}{section.5.2}%
+\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}Python代码}{19}{appendix.A}%
+\contentsline {section}{\numberline {A.1}spider.py---用来爬取网页数据}{19}{section.A.1}%
+\contentsline {section}{\numberline {A.2}utils.py---app.py中所调用的方法}{22}{section.A.2}%
+\contentsline {section}{\numberline {A.3}app.py---启动Flask的主程序}{25}{section.A.3}%
+\contentsline {chapter}{\numberline {附录 B\hspace {.3em}}网页代码}{29}{appendix.B}%
+\contentsline {section}{\numberline {B.1}index.html}{29}{section.B.1}%
+\contentsline {section}{\numberline {B.2}controller.js}{31}{section.B.2}%
+\contentsline {section}{\numberline {B.3}ec\underline {\nobreakspace {}}center.js}{34}{section.B.3}%
+\contentsline {chapter}{参考文献}{37}{section*.13}%
