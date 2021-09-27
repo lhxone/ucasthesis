@@ -1,3 +1,5 @@
+# 本版本复刻自[这里](https://github.com/mohuangrui/ucasthesis)，已经过Lhxone的重新写作，感谢原作者的分享与维护。以下为原作者的README文件：
+
 # `ucasthesis` 国科大学位论文 LaTeX 模板 [最新样式]
 
 ## 模板下载
